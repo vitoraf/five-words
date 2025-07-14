@@ -19,7 +19,7 @@
                 <input v-model="store.wordsList[3]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word4"/>    
                 <input v-model="store.wordsList[4]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word5"/>    
                 <div class="w-full" >
-                    <BaseButton class="bg-slate-500 text-white hover:bg-slate-900 w-full md:w-full" type="submit">
+                    <BaseButton class="bg-gray-500 text-white hover:bg-gray-600 w-full md:w-full" type="submit">
                         Continuar
                         <Icon name="material-symbols:arrow-circle-right" width="32" height="32"/>
                     </BaseButton>

@@ -39,7 +39,8 @@ export const useWordsStore = defineStore(
       winner: null,
     });
     const channel = ref(null);
-
+    const showAlert = ref(false);
+    const currentGuess = ref('')
     async function createOrJoinChannel() {
       user.value.words = wordsList.value;
       user.value.guesses = {
@@ -76,8 +77,12 @@ export const useWordsStore = defineStore(
         .on("broadcast", { event: "guess" }, ({ payload }) => {
           console.log("guess", payload);
           if (payload.userId !== user.value.id) {
-            opponent.value.guesses[payload.round] = payload.word;
-            // state.value.guess = payload
+            opponent.value.guesses[payload.round] = payload.guess;
+            opponent.value.index = payload.index
+            opponent.value.round = payload.round
+            opponent.value.position[payload.round] = true
+            currentGuess.value = payload.guess
+            handleAlert();
           }
         })
         .on("broadcast", { event: "turn" }, ({ payload }) => {
@@ -112,29 +117,33 @@ export const useWordsStore = defineStore(
       let target = normalizeWords(
         opponent.value.words[user.value.round].toLowerCase()
       );
-      await channel.value.send({
+      user.value.guesses[user.value.round] = word
+       await channel.value.send({
         type: "broadcast",
         event: "guess",
         payload: {
           userId: user.value.id,
-          guess: guess,
+          guess: word,
           round: user.value.round,
-          index: user.value.index,
+          index: user.value.index+1,
         },
       });
       if (guess === target) {
-        user.value.guesses[user.value.round] = word;
-        user.value.position[user.value.round] = true;
+        
         if (user.value.round === user.value.position.length - 1) {
           declareWinner(user.value.id);
         } else {
           user.value.round += 1;
+          user.value.position[user.value.round] = true;
         }
         user.value.index = 0;
       } else {
-        setTurn(opponent.value.id);
         user.value.index += 1;
+        setTimeout(() => {
+          setTurn(opponent.value.id);
+        }, 3000)
       }
+     
     }
 
     async function setTurn(nextUserId) {
@@ -150,15 +159,16 @@ export const useWordsStore = defineStore(
     }
 
     function normalizeWords(text) {
-      text = text.replace(/[ÀÁÂÃÄÅàáâãäå]/g, "A");
-      text = text.replace(/[ÈÉÊËéèêë]/g, "E");
-      text = text.replace(/[ÌÍÎÏíìîï]/g, "I");
-      text = text.replace(/[ÒÓÔÕÖóòôõö]/g, "O");
-      text = text.replace(/[ÙÚÛÜúùûü]/g, "U");
+      text = text.replace(/[ÀÁÂÃÄÅàáâãäå]/g, "a");
+      text = text.replace(/[ÈÉÊËéèêë]/g, "e");
+      text = text.replace(/[ÌÍÎÏíìîï]/g, "i");
+      text = text.replace(/[ÒÓÔÕÖóòôõö]/g, "o");
+      text = text.replace(/[ÙÚÛÜúùûü]/g, "u");
       return text;
     }
 
     async function declareWinner(winnerId) {
+      console.log(winnerId);
       state.value.winner = winnerId;
       state.value.status = "finished";
       await channel.value.send({
@@ -185,6 +195,9 @@ export const useWordsStore = defineStore(
         3: "",
         4: "",
       }
+      opponent.value.words= wordsList.value
+      opponent.value.name = ''
+      opponent.value.id = ''
       user.value.round= 1
       user.value.index= 0
       user.value.guesses= {
@@ -193,10 +206,17 @@ export const useWordsStore = defineStore(
         3: "",
         4: "",
       }
+      user.value.words= wordsList.value
       user.value.position = [true, true, false, false, false]
       navigateTo("/");
     }
 
+    function handleAlert(){
+      showAlert.value = true
+      setTimeout(() => {
+        showAlert.value = false
+      }, 3000);
+    }
     return {
       user,
       opponent,
@@ -205,15 +225,19 @@ export const useWordsStore = defineStore(
       setTurn,
       declareWinner,
       resetGame,
+      normalizeWords,
       wordsList,
       state,
       initialTurn,
+      showAlert,
+      currentGuess
     };
   },
   {
     persist: true,
   }
 );
+      
 
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useWordsStore, import.meta.hot));

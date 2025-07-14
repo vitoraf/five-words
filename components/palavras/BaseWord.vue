@@ -6,16 +6,27 @@
                 <span class="border rounded flex size-8 justify-center items-center text-slate-200 p-2" v-if="index <= 0 || position <= 0">
                     {{ letter }}
                 </span>
-                <span v-if="(position === data.round && index > 0 && position > 0 && index <= data.index) || ((store.state.winner !== data.id && store.state.winner !== null) && index > 0 && position > 0  && data.guesses[position] === '')" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-red-800">
+                <template v-if="index>0 && position > 0 && (index < data.index || position <= data.round) && data.position[position] && data.guesses[position] !== ''">
+                    <span v-if="data.guesses[position] !== word && index <= data.index" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-red-800">{{ letter }}</span>
+                    <span v-if="data.guesses[position] === word" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-green-500">{{ letter }}</span>
+
+                </template>
+
+                
+                <!-- <span v-if="(position === data.round && index > 0 && position > 0 && index <= data.index) || ((store.state.winner !== data.id && store.state.winner !== null) && index > 0 && position > 0  (data.guesses[position] !== '' && data.guesses[position] !== word))" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-red-800">
                 {{ letter }}
                 </span>
                 
-                <span type="text" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-green-500"  v-if="(data.guesses[position] !== ''  && position > 0 && index > 0) || (store.state.winner === data.id && index > 0 && position > 0)" maxlength="1">{{ letter }}</span>
+                <span type="text" class="border rounded flex size-8 justify-center items-center text-slate-200 p-2 border-green-500"  v-if="(data.guesses[position] !== '' && data.guesses[position] === word  && position > 0 && index > 0) || (store.state.winner === data.id && index > 0 && position > 0)" maxlength="1">{{ letter }}</span> -->
                 
     
             </template>
 
-            
+        </div>
+        <div v-if="position>0 && store.normalizeWords(data.guesses[position].toLowerCase()) === store.normalizeWords(word.toLowerCase())">
+             <span class="border border-green-500 rounded flex size-8 justify-center items-center text-green-500 p-2">
+                <icon name="material-symbols:check" width="32" height="32"/>
+             </span>
         </div>
 
     </div>
