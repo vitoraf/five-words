@@ -10,9 +10,13 @@
         </div>
         <div class=" w-full flex gap-4 justify-center mt-3 items-center flex-col md:flex-row text-slate-700 dark:text-slate-100 mb-5">
             <div class="flex flex-col text-center w-full items-center justify-center">
-                <h2 class="text-md  text-center my-4">Escolha 5 palavras</h2>
+                <div class="w-full md:w-1/2 relative flex justify-center gap-3">
+                    <h2 class="text-md  text-center my-4">Escolha 5 palavras</h2>
+                    <BaseButton title="Sortear uma palavra" class="p-3" @click="handleRandomWord"><Icon name="mingcute:random-line" width="32" height="32"/></BaseButton>
+
+                </div>
                 <form class="w-1/2 flex flex-col" @submit.prevent="handleStart">
-                <input v-model="store.wordsList[0]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word1"/>    
+                <input v-model="store.wordsList[0]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700  mb-4" name="word1"/>    
                 <input v-model="store.wordsList[1]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word2"/>    
                 <input v-model="store.wordsList[2]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word3"/>    
                 <input v-model="store.wordsList[3]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word4"/>    
@@ -38,6 +42,7 @@
 </template>
     
 <script setup >
+import {list} from '~/data/nouns'
 // definePageMeta({
     //   layout: 'project'
     // })
@@ -55,6 +60,10 @@
         setTimeout(() => {
             navigateTo('/play')
         }, 1000)
+    }
+    function handleRandomWord(){
+        // console.log(list)
+        store.wordsList[0] = list[Math.floor(Math.random() * list.length)]
     }
 //    watch(data, (newValue) => {
 //        history.value.push(`server: ${newValue}`)

@@ -26,6 +26,7 @@ export const useWordsStore = defineStore(
     const opponent = ref({
       position: [true, true, false, false, false],
       round: 1,
+      id: '',
       index: 0,
       guesses: {
         1: "",

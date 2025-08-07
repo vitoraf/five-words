@@ -16,12 +16,12 @@
         <BaseModal v-if="howToPlay" title="Como jogar?" @close="howToPlay = false">
          <article>
             <p class="mb-5">
-             Five Words é um jogo onde você escolhe 5 palavras e o seu adversário tenta adivinhar as palavras que vocé escolheu e vice-versa.
+             Five Words é um jogo onde você escolhe 5 palavras e o seu adversário tenta adivinhar as palavras que você escolheu e vice-versa.
              Regras:</p>
              <ul>
                <li class="mb-3">- A primeira palavra é visível para o seu adversário e vice-versa. As palavras restantes são ocultas, sendo exibidas apenas a inicial.</li>
                <li class="mb-3">- A palavra seguinte tem que ser relacionada com a palavra anterior, mas não necessariamente todas devem estar ligadas. (Exemplo: Palavra 1: "Amarelo", Palavra 2: "Girassol", a palavra 3 deve ser relacionada a "Girassol", mas não a "Amarelo", uma boa palavra seria "Flor")</li>
-                <li class="mb-3">- Cada jogador em sua vez, deve fazer um palpite da palavra do oponente. Caso ele acerte, ele pode tentar adivinhar a próxima palavra. Caso ele erre, ele perde a vez e uma letra da palavra é revelada.</li>
+                <li class="mb-3">- Cada jogador deve fazer um palpite da palavra do oponente. Caso ele acerte, ele pode tentar adivinhar a próxima palavra. Caso ele erre, ele perde a vez e uma letra da palavra é revelada.</li>
                 <li class="mb-3">- Ganha o jogo quem acertar as cinco palavras primeiro</li>
              </ul>
          </article>
