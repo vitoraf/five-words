@@ -7,6 +7,7 @@ import supabase from "~/utils/supabase";
 export const useWordsStore = defineStore(
   "words",
   () => {
+    const room = ref('')
     const wordsList = ref(Array(5).fill(""));
     const user = ref({
       id: crypto.randomUUID(),
@@ -42,6 +43,7 @@ export const useWordsStore = defineStore(
     const showAlert = ref(false);
     const currentGuess = ref('')
     async function createOrJoinChannel() {
+      console.log(room.value)
       user.value.words = wordsList.value;
       user.value.guesses = {
         1: "",
@@ -52,7 +54,7 @@ export const useWordsStore = defineStore(
       user.value.winner = null;
       user.value.round = 1;
       user.value.index = 0;
-      channel.value = supabase.channel("5words", {
+      channel.value = supabase.channel(room.value, {
         config: {
           broadcast: {
             self: true,
@@ -208,7 +210,7 @@ export const useWordsStore = defineStore(
       }
       user.value.words= wordsList.value
       user.value.position = [true, true, false, false, false]
-      navigateTo("/");
+      navigateTo("/room/"+room.value);
     }
 
     function handleAlert(){
@@ -230,7 +232,8 @@ export const useWordsStore = defineStore(
       state,
       initialTurn,
       showAlert,
-      currentGuess
+      currentGuess,
+      room
     };
   },
   {

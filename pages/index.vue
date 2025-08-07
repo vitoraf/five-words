@@ -1,49 +1,55 @@
 <template>
-     <div class="w-full md:w-3/5 items-center flex flex-col gap-3">
-         <h1 class="text-5xl font-bold  text-center">Jogo das 5 palavras</h1>
-         <h2 class="text-xl  text-center mt-4">Escolha 5 palavras e jogue com seus amigos</h2>
-        <div class="pt-5 w-full flex gap-4 justify-center mt-5 items-center flex-col md:flex-row">
-            <div class="text-center w-full mt-5">
-                 <label for="playerName" class="flex flex-col w-full justify-center items-center">Digite seu nome
-                    <input type="text" id="playerName" name="playerName" class="w-1/2 px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700" v-model="store.user.name">
-                </label>
-            </div>
-        </div>
-        <div class=" w-full flex gap-4 justify-center mt-3 items-center flex-col md:flex-row text-slate-700 dark:text-slate-100">
-            <div class="flex flex-col text-center w-full items-center justify-center">
-                <h2 class="text-md  text-center my-4">Escolha 5 palavras</h2>
-                <form class="w-1/2 flex flex-col" @submit.prevent="handleStart">
-                <input v-model="store.wordsList[0]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word1"/>    
-                <input v-model="store.wordsList[1]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word2"/>    
-                <input v-model="store.wordsList[2]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word3"/>    
-                <input v-model="store.wordsList[3]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word4"/>    
-                <input v-model="store.wordsList[4]" type="text" required class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="word5"/>    
-                <div class="w-full" >
-                    <BaseButton class="bg-gray-500 text-white hover:bg-gray-600 w-full md:w-full" type="submit">
-                        Continuar
-                        <Icon name="material-symbols:arrow-circle-right" width="32" height="32"/>
-                    </BaseButton>
-                </div>
-            </form>
-            </div>
-        </div>
+     <section class="flex flex-col gap-5 justify-center items-center size-full">
+        <BaseButton class="bg-gray-500 text-white hover:bg-gray-600 w-full md:w-full p-5" @click="handleStart">Começar um novo jogo</BaseButton>
+        <BaseButton class="bg-gray-500 text-white hover:bg-gray-600 w-full md:w-full p-5" @click="()=>enterRoom = true">Entrar em uma sala</BaseButton>
+        <BaseButton class="bg-gray-500 text-white hover:bg-gray-600 w-full md:w-full p-5" @click="()=>howToPlay = true">Como jogar?</BaseButton>
+        <BaseModal v-if="enterRoom" title="Entrar em uma sala" @close="enterRoom = false">
+           <div class="flex flex-col ">
+            <label class="flex flex-col gap-2">
+               Insira o código da sala
+               <input type="text" v-model="room" class="w-full px-5 text-center py-2 rounded bg-slate-100 dark:bg-slate-700 mb-4" name="room"/>
+            </label>
+            <BaseButton class="bg-gray-500 text-white hover:bg-gray-600w-full" @click="()=>navigateTo('/room/'+room)">Entrar</BaseButton>
+           </div>
+
+        </BaseModal>
+        <BaseModal v-if="howToPlay" title="Como jogar?" @close="howToPlay = false">
+         <article>
+            <p class="mb-5">
+             Five Words é um jogo onde você escolhe 5 palavras e o seu adversário tenta adivinhar as palavras que vocé escolheu e vice-versa.
+             Regras:</p>
+             <ul>
+               <li class="mb-3">- A primeira palavra é visível para o seu adversário e vice-versa. As palavras restantes são ocultas, sendo exibidas apenas a inicial.</li>
+               <li class="mb-3">- A palavra seguinte tem que ser relacionada com a palavra anterior, mas não necessariamente todas devem estar ligadas. (Exemplo: Palavra 1: "Amarelo", Palavra 2: "Girassol", a palavra 3 deve ser relacionada a "Girassol", mas não a "Amarelo", uma boa palavra seria "Flor")</li>
+                <li class="mb-3">- Cada jogador em sua vez, deve fazer um palpite da palavra do oponente. Caso ele acerte, ele pode tentar adivinhar a próxima palavra. Caso ele erre, ele perde a vez e uma letra da palavra é revelada.</li>
+                <li class="mb-3">- Ganha o jogo quem acertar as cinco palavras primeiro</li>
+             </ul>
+         </article>
             
-        </div>
+            
+           
+   
+        </BaseModal>
+     </section>
+     
 </template>
     
 <script setup >
+const enterRoom = ref(false)
+const howToPlay = ref(false)
+
 // definePageMeta({
 //   layout: 'project'
 // })
 //    const {status, data, send, open, close} = useWebSocket(`ws://${location.host}/api/websocket`)
    
-   const store = useWordsStore()
+    const store = useWordsStore()
     const name = ref('')
     const wordsList = ref(Array(5).fill(''))
 
     function handleStart(){
         
-        navigateTo('/jogo')
+        navigateTo('/room/'+crypto.randomUUID())
     }
 //    watch(data, (newValue) => {
 //        history.value.push(`server: ${newValue}`)

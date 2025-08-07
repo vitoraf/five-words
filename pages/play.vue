@@ -44,13 +44,16 @@
 </template>
     
 <script setup >
+    definePageMeta({
+  layout: 'game'
+})
     import { ref } from 'vue'
     import WordList from '@/components/palavras/WordList.vue'
     
     const store = useWordsStore()
     const guess = ref('')
     onBeforeMount(()=>{
-        store.createOrJoinChannel('5words')
+        store.createOrJoinChannel()
     })
     async function handleGuess() {
         await store.guessWord(guess.value)
